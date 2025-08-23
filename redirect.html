@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クエリパラメータ表示ページ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+
+        .url-display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .params-container {
+            margin-top: 25px;
+        }
+
+        .param-item {
+            background: linear-gradient(45deg, #f8f9fa, #ffffff);
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .param-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .param-key {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .param-value {
+            color: #4a5568;
+            font-size: 14px;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            word-break: break-word;
+        }
+
+        .no-params {
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #cbd5e0;
+        }
+
+        .example-links {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .example-links h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .example-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .example-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .navigation {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .index-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .index-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+            background: linear-gradient(45deg, #38a169, #2f855a);
+        }
+
+        .api-test-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .api-test-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .api-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .api-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .api-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .api-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .api-response-section {
+            margin-top: 25px;
+        }
+
+        .api-response-section h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 20px;
+            min-height: 60px;
+            border: 1px solid #4a5568;
+        }
+
+        .code-block.empty {
+            color: #718096;
+            font-style: italic;
+        }
+
+        .loading {
+            color: #667eea;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #e53e3e;
+            border-color: #feb2b2;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-color: #9ae6b4;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 クエリパラメータ表示</h1>
+
+        <div class="url-display">
+            <strong>現在のURL:</strong><br>
+            <span id="currentUrl"></span>
+        </div>
+
+        <div class="params-container">
+            <h2>クエリパラメータ</h2>
+            <div id="paramsList"></div>
+        </div>
+
+        <div class="api-test-section">
+            <h2>トークン取得</h2>
+            <div class="api-form">
+                <div class="form-group">
+                    <label for="codeInput">code(上記のクエリパラメータのcodeを入力してください)</label>
+                    <textarea id="codeInput" placeholder="" rows="3"></textarea>
+                    <div id="codeError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="clientIdInput">Streamlabs クライアントID</label>
+                    <input type="text" id="clientIdInput">
+                    <div id="clientIdError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="clientSecretInput">Streamlabs クライアントシークレット</label>
+                    <input type="text" id="clientSecretInput">
+                    <div id="clientSecretError" class="error-message"></div>
+                </div>
+                <button id="sendApiRequest" class="api-button">API リクエスト送信</button>
+            </div>
+
+            <div class="api-response-section">
+                <h3>レスポンス</h3>
+                <div id="apiResponse" class="code-block"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="./index.html" class="index-button">トークン登録画面</a>
+        </div>
+    </div>
+
+    <script>
+        function displayCurrentUrl() {
+            document.getElementById('currentUrl').textContent = window.location.href;
+        }
+
+        function parseAndDisplayParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramsList = document.getElementById('paramsList');
+
+            // パラメータリストをクリア
+            paramsList.innerHTML = '';
+
+            // パラメータが存在するかチェック
+            const params = Array.from(urlParams.entries());
+
+            // 各パラメータを表示
+            params.forEach(([key, value]) => {
+                const paramItem = document.createElement('div');
+                paramItem.className = 'param-item';
+
+                paramItem.innerHTML = `
+                    <div class="param-key">📌 ${escapeHtml(key)}</div>
+                    <div class="param-value">${escapeHtml(value)}</div>
+                `;
+
+                paramsList.appendChild(paramItem);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 初期表示
+        displayCurrentUrl();
+        parseAndDisplayParams();
+
+        // URLが変更されたときに更新（ブラウザの戻る/進むボタンなど）
+        window.addEventListener('popstate', () => {
+            displayCurrentUrl();
+            parseAndDisplayParams();
+        });
+
+        document.getElementById('sendApiRequest').addEventListener('click', async () => {
+            const code = document.getElementById('codeInput').value.trim();
+            const clientId = document.getElementById('clientIdInput').value.trim();
+            const clientSecret = document.getElementById('clientSecretInput').value.trim();
+
+            const apiResponse = document.getElementById('apiResponse');
+            const button = document.getElementById('sendApiRequest');
+
+            // エラーメッセージをクリア
+            clearErrorMessages();
+
+            // 入力チェック
+            let hasError = false;
+            if (!code) {
+                showErrorMessage('codeError', 'Authorization Codeを入力してください');
+                hasError = true;
+            }
+            if (!clientId) {
+                showErrorMessage('clientIdError', 'Client IDを入力してください');
+                hasError = true;
+            }
+            if (!clientSecret) {
+                showErrorMessage('clientSecretError', 'Client Secretを入力してください');
+                hasError = true;
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            // ローディング状態
+            button.disabled = true;
+            button.textContent = '送信中...';
+            apiResponse.className = 'code-block loading';
+            apiResponse.textContent = 'APIリクエスト送信中...';
+
+            const requestData = {
+                code: code,
+                client_id: clientId,
+                client_secret: clientSecret
+            };
+
+            try {
+                const response = await fetch('https://92ct9epqp4.ap-northeast-1.awsapprunner.com/api/tokens', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // レスポンスを見やすい形式で表示
+                    const formattedResponse = formatTokenResponse(result);
+                    apiResponse.innerHTML = formattedResponse;
+                    apiResponse.className = 'code-block success';
+                } else {
+                    apiResponse.textContent = `エラー (${response.status}): ${JSON.stringify(result, null, 2)}`;
+                    apiResponse.className = 'code-block error';
+                }
+
+            } catch (error) {
+            }
+
+            // ボタンを元に戻す
+            button.disabled = false;
+            button.textContent = 'API リクエスト送信';
+        });
+
+        // トークンレスポンスを見やすい形式にフォーマットする関数
+        function formatTokenResponse(responseData) {
+            if (!responseData) {
+                return 'レスポンスデータがありません';
+            }
+
+            const accessToken = responseData.access_token || 'なし';
+            const refreshToken = responseData.refresh_token || 'なし';
+
+            return `<div style="font-family: 'Courier New', monospace;">
+<strong style="color: #2d3748; font-size: 16px;">アクセストークン：</strong>
+<div style="background: #f7fafc; padding: 10px; margin: 10px 0; border-radius: 5px; word-break: break-all; border-left: 4px solid #48bb78;">${escapeHtml(accessToken)}</div>
+
+<strong style="color: #2d3748; font-size: 16px;">リフレッシュトークン：</strong>
+<div style="background: #f7fafc; padding: 10px; margin: 10px 0; border-radius: 5px; word-break: break-all; border-left: 4px solid #4299e1;">${escapeHtml(refreshToken)}</div>
+</div>`;
+        }
+
+        // エラーメッセージ表示関数
+        function showErrorMessage(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        // エラーメッセージクリア関数
+        function clearErrorMessages() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+                element.classList.remove('show');
+            });
+        }
+    </script>
+</body>
+
+</html>
