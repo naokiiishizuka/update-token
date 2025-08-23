@@ -334,15 +334,17 @@
 
             // 各パラメータを表示
             params.forEach(([key, value]) => {
-                const paramItem = document.createElement('div');
-                paramItem.className = 'param-item';
+                if (key == "code") {
+                    const paramItem = document.createElement('div');
+                    paramItem.className = 'param-item';
 
-                paramItem.innerHTML = `
+                    paramItem.innerHTML = `
                     <div class="param-key">📌 ${escapeHtml(key)}</div>
                     <div class="param-value">${escapeHtml(value)}</div>
                 `;
 
-                paramsList.appendChild(paramItem);
+                    paramsList.appendChild(paramItem);
+                }
             });
         }
 
